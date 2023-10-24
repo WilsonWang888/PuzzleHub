@@ -1,10 +1,89 @@
 .board {
-  margin-left: auto;
-  margin-right: auto;
+  
 }
 
 .row{
   text-align: center;
-  margin-left: auto;
-  margin-right: auto;
+}
+
+.topNums{
+  justify-content: center;
+  display: flex;
+  text-align: center;
+  padding-bottom: 10px;
+  margin-top: 20px;
+}
+
+.topArr{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+}
+
+.topCell{
+  height: 30px; 
+  width: 65px;
+  font-size: 24px;
+}
+
+.sideContainer{
+  display: flex;
+  justify-content: right;
+  
+}
+
+.sideNums{
+  display: flex;
+  justify-content: end;
+  text-align: right;
+  padding-right: 15px;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.sideArr{
+  display: flex;
+  flex-direction: row;
+  align-items: center; 
+  justify-content: end;
+  vertical-align:auto;
+}
+
+.sideCell{
+  height: 65px;
+  width: 30px;
+  font-size: 24px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+
+}
+
+.vBalancer{
+  margin-top: auto;
+  padding-bottom: 10px;
+  margin-bottom: auto;
+  vertical-align:auto;
+}
+
+.midsection{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.sleeperCell{
+  color: #2C2C2C;
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

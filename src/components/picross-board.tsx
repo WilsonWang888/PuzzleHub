@@ -1,26 +1,23 @@
 import React from "react";
 import PicrossTile from "./picross-tile";
 import './picross-board.css'
+import seedrandom from "seedrandom";
 import { useState } from 'react';
-import { off } from "process";
-
-// seed
-var counter = 1258;
 
 function genBoard(width: number, height: number){
   var board = [];
-  var randomVal, fcount = 0, tcount = 0
+  var randomVal;
+  const seedrandom = require('seedrandom');
+  const rng = seedrandom('11223212');
 
   for(var i = 0 ; i < width ; i++) {
     var row = [];
     for(var j = 0 ; j < height ; j++) {
-      randomVal = Math.random();
+      randomVal = rng();
       if(randomVal > 0.5){
         row.push(false)
-        fcount++
       } else{
         row.push(true)
-        tcount++
       }
     }
     board.push(row);
@@ -34,6 +31,51 @@ const handleTileClick = (tileData: any) => {
   console.log(`Data received from Tile: ${tileData}`);
 };
 
+function countRows(boardData: Array<Array<boolean>>){
+  var res: Array<Array<number>> = [];
+  var count: number = 0;
+
+  for(var i = 0; i < boardData.length; i++){
+    var row: Array<number> = []
+    for(var j = 0; j < boardData[0].length; j++){
+      if(boardData[i][j]){
+        count++;
+      } else if(count != 0 && !boardData[i][j]){
+        row.push(count);
+        count = 0;
+      }
+    }
+    if(count != 0){
+      row.push(count)
+      count = 0
+    }
+    res.push(row)
+  }
+  return res
+}
+
+function countCols(boardData: Array<Array<boolean>>){
+  var res: Array<Array<number>> = [];
+  var count: number = 0;
+
+  for(var j = 0; j < boardData[0].length; j++){
+    var col: Array<number> = []
+    for(var i = 0; i < boardData.length; i++){
+      if(boardData[i][j]){
+        count++;
+      } else if(count != 0 && !boardData[i][j]){
+        col.push(count);
+        count = 0;
+      }
+    }
+    if(count != 0){
+      col.push(count)
+      count = 0
+    }
+    res.push(col)
+  }
+  return res
+}
 
 export default function PicrossBoard(props: any) {
   let width: number = props.width;
@@ -42,16 +84,58 @@ export default function PicrossBoard(props: any) {
 
   //const [boardData, setValue] = useState(genBoard)
   const boardData = genBoard(width, height);
+
+  const rowNums = countRows(boardData);
+  const colNums = countCols(boardData)
+  console.log(rowNums)
+  console.log(boardData)
   
   return (
-    <div className="board">
-      {data.map((row, rowIndex) => (
-        <div key={rowIndex} className="row">
-          {row.map((component, colIndex) => (
-            <PicrossTile key={rowIndex + '-' + colIndex} onClick={handleTileClick} width={rowIndex} height={colIndex}></PicrossTile>
+    <div>
+      <div className="topNums">
+        {colNums.map((col, rowIndex) => (
+          <div key={rowIndex} className="topArr">
+            {col.map((component: any, colIndex) => (
+              <div className="topCell unselectable">{component}</div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <div className="midsection">
+        <div className="sideContainer">
+          <div className="sideNums">
+            {rowNums.map((col, rowIndex) => (
+              <div key={rowIndex} className="sideArr">
+                {col.map((component: any, colIndex) => (
+                  <div className="sideCell unselectable">
+                    <div className="vBalancer">{component}</div>
+                    </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="board">
+          {data.map((row, rowIndex) => (
+            <div key={rowIndex} className="row">
+              {row.map((component, colIndex) => (
+                <PicrossTile key={rowIndex + '-' + colIndex} onClick={handleTileClick} width={rowIndex} height={colIndex}></PicrossTile>
+              ))}
+            </div>
           ))}
         </div>
-      ))}
+        <div className="sideContainer" hidden>
+          <div className="sideNums">
+            {rowNums.map((col, rowIndex) => (
+              <div key={rowIndex} className="sideArr">
+                {col.map((component: any, colIndex) => (
+                  <div className="sideCell sleeperCell unselectable" >{component}</div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
