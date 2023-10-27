@@ -3,18 +3,25 @@ import PicrossTile from "./picross-tile";
 import './picross-board.css'
 import seedrandom from "seedrandom";
 import { useState } from 'react';
+import { useRouter } from "next/router";
+import ReloadButton from "./reload-button";
+
+var trackingBoard: Array<Array<boolean>>;
+var boardData: Array<Array<boolean>>;
 
 function genBoard(width: number, height: number){
   var board = [];
   var randomVal;
   const seedrandom = require('seedrandom');
-  const rng = seedrandom('11223212');
+  const seed = new Date().getTime().toString()
+  const rng = seedrandom(seed);
+  console.log('generating board')
 
   for(var i = 0 ; i < width ; i++) {
     var row = [];
     for(var j = 0 ; j < height ; j++) {
       randomVal = rng();
-      if(randomVal > 0.5){
+      if(randomVal > 0.6){
         row.push(false)
       } else{
         row.push(true)
@@ -26,10 +33,16 @@ function genBoard(width: number, height: number){
   return board
 }
 
-const handleTileClick = (tileData: any) => {
-  // Do something with the data received from Tile
-  console.log(`Data received from Tile: ${tileData}`);
-};
+function compareStates(tracking: Array<Array<number>>, actual: Array<Array<number>>){
+  for(var i = 0; i < tracking.length; i++){
+    for(var j = 0; j < tracking.length; j++){
+      if(tracking[i][j] != actual[i][j]){
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 function countRows(boardData: Array<Array<boolean>>){
   var res: Array<Array<number>> = [];
@@ -77,18 +90,45 @@ function countCols(boardData: Array<Array<boolean>>){
   return res
 }
 
+function emptyBoard(width: number, height: number){
+  var board = [];
+  
+  for(var i = 0 ; i < width ; i++) {
+    var row = [];
+    for(var j = 0 ; j < height ; j++) {
+      row.push(false)
+    }
+    board.push(row);
+  } 
+  return board;
+}
+
 export default function PicrossBoard(props: any) {
   let width: number = props.width;
   let height: number = props.height;
-  let data = Array.from({length: height}, (_,h_index) => (Array.from({length: width}, (_,w_index) => (0))));  
+  //let data = Array.from({length: height}, (_,h_index) => (Array.from({length: width}, (_,w_index) => (0))));  
 
-  //const [boardData, setValue] = useState(genBoard)
-  const boardData = genBoard(width, height);
+  const [isVictory, setIsVictory] = useState(false)
+  boardData = genBoard(width, height);
+  trackingBoard = emptyBoard(width, height)
 
   const rowNums = countRows(boardData);
   const colNums = countCols(boardData)
-  console.log(rowNums)
   console.log(boardData)
+
+  
+  const handleTileClick = (width: number, height: number, setIsVictory: Function) => {
+    trackingBoard[width][height] = !trackingBoard[width][height]
+    
+    if(compareStates(countCols(trackingBoard),countCols(boardData))
+    && compareStates(countRows(trackingBoard),countRows(boardData))){
+      setIsVictory(true)
+      console.log("VERIFIED")
+    } else{
+      setIsVictory(false)
+      console.log("DEVERIFIED")
+    }
+  }
   
   return (
     <div>
@@ -116,7 +156,7 @@ export default function PicrossBoard(props: any) {
           </div>
         </div>
         <div className="board">
-          {data.map((row, rowIndex) => (
+          {boardData.map((row, rowIndex) => (
             <div key={rowIndex} className="row">
               {row.map((component, colIndex) => (
                 <PicrossTile key={rowIndex + '-' + colIndex} onClick={handleTileClick} width={rowIndex} height={colIndex}></PicrossTile>
@@ -124,17 +164,12 @@ export default function PicrossBoard(props: any) {
             </div>
           ))}
         </div>
-        <div className="sideContainer" hidden>
-          <div className="sideNums">
-            {rowNums.map((col, rowIndex) => (
-              <div key={rowIndex} className="sideArr">
-                {col.map((component: any, colIndex) => (
-                  <div className="sideCell sleeperCell unselectable" >{component}</div>
-                ))}
-              </div>
-            ))}
-          </div>
+        <div className="resetPanel">
+          <ReloadButton></ReloadButton>
         </div>
+      </div>
+      <div className="victoryIndicator" >
+        <p hidden={!isVictory}>you win</p>
       </div>
     </div>
   );

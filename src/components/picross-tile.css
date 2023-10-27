@@ -13,10 +13,13 @@
 }
 
 .checked {
-  background: #4BB5AC;
+  background: #F900FF;
 }
 
 .unchecked {
   background: #fff;
 }
 
+.win {
+  background: #06FF00;
+}

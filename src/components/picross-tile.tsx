@@ -5,12 +5,12 @@ export default function PicrossTile(props: any) {
   const height = props.height
   const width = props.width
   const onClick = props.onClick
+  const setIsVictory = props.setIsVictory
   const [clicked, setValue] = useState(false)
 
   function handleClick(){
     setValue(!clicked);
-    const bubble = 'clicked ' + width + height
-    onClick(bubble);
+    onClick(width, height, setIsVictory);
   }
 
   return <button 

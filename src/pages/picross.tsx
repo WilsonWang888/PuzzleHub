@@ -2,9 +2,12 @@
 import React from 'react';
 import PicrossTile from '../components/picross-tile'
 import '../styles/global.css'
-import PicrossBoard from '@/components/picross-board';
 
 export default PicrossPage;
+
+import dynamic from 'next/dynamic'
+ 
+const PicrossBoard = dynamic(() => import('../components/picross-board'), { ssr: false })
 
 function PicrossPage() {
   return (

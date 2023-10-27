@@ -12,6 +12,7 @@
   text-align: center;
   padding-bottom: 10px;
   margin-top: 20px;
+  height: 140px;
 }
 
 .topArr{
@@ -40,6 +41,7 @@
   padding-right: 15px;
   flex-direction: column;
   align-items: flex-end;
+  width: 140px;
 }
 
 .sideArr{
@@ -67,6 +69,12 @@
   vertical-align:auto;
 }
 
+.resetPanel{
+  width: 140px;
+  align-items: center;
+  display: flex;
+}
+
 .midsection{
   width: 100%;
   display: flex;
@@ -86,4 +94,11 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.victoryIndicator{
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 52;
+  color: chartreuse;
 }
