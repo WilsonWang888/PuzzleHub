@@ -108,20 +108,26 @@ export default function PicrossBoard(props: any) {
   let height: number = props.height;
   //let data = Array.from({length: height}, (_,h_index) => (Array.from({length: width}, (_,w_index) => (0))));  
 
-  const [isVictory, setIsVictory] = useState(false)
-  boardData = genBoard(width, height);
-  trackingBoard = emptyBoard(width, height)
+  var colNums: Array<Array<number>> = [[]];
+  var rowNums: Array<Array<number>> = [];
 
-  const rowNums = countRows(boardData);
-  const colNums = countCols(boardData)
-  console.log(boardData)
+  const [isVictory, setIsVictory] = useState(true)
+  var [boardData, setBoardData] = useState(genBoard(width, height))
+
+  if(!isVictory){
+    trackingBoard = emptyBoard(width, height)
+    rowNums = countRows(boardData);
+    colNums = countCols(boardData)
+    console.log(boardData)
+  }
 
   
-  const handleTileClick = (width: number, height: number, setIsVictory: Function) => {
+  const handleTileClick = (width: number, height: number, setIsVictory: any) => {
     trackingBoard[width][height] = !trackingBoard[width][height]
+    console.log(typeof(setIsVictory))
     
     if(compareStates(countCols(trackingBoard),countCols(boardData))
-    && compareStates(countRows(trackingBoard),countRows(boardData))){
+    && compareStates(countRows(trackingBoard),countRows(boardData))){ 
       setIsVictory(true)
       console.log("VERIFIED")
     } else{
@@ -159,7 +165,7 @@ export default function PicrossBoard(props: any) {
           {boardData.map((row, rowIndex) => (
             <div key={rowIndex} className="row">
               {row.map((component, colIndex) => (
-                <PicrossTile key={rowIndex + '-' + colIndex} onClick={handleTileClick} width={rowIndex} height={colIndex}></PicrossTile>
+                <PicrossTile isVictory={isVictory} key={rowIndex + '-' + colIndex} onClick={handleTileClick} width={rowIndex} height={colIndex} setIsVictory={setIsVictory}></PicrossTile>
               ))}
             </div>
           ))}
@@ -168,8 +174,8 @@ export default function PicrossBoard(props: any) {
           <ReloadButton></ReloadButton>
         </div>
       </div>
-      <div className="victoryIndicator" >
-        <p hidden={!isVictory}>you win</p>
+      <div className="victoryIndicator" hidden={!isVictory}>
+        <p className="victoryIndicator">You Win!</p>
       </div>
     </div>
   );

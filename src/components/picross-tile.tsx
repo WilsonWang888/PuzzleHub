@@ -6,6 +6,7 @@ export default function PicrossTile(props: any) {
   const width = props.width
   const onClick = props.onClick
   const setIsVictory = props.setIsVictory
+  const isVictory = props.isVictory
   const [clicked, setValue] = useState(false)
 
   function handleClick(){
@@ -14,7 +15,8 @@ export default function PicrossTile(props: any) {
   }
 
   return <button 
-    className={'tile ' + (clicked ? 'checked' : 'unchecked')} 
+    className={'tile ' + (clicked ? (isVictory ? 'win' : 'checked') : 'unchecked')} 
+    disabled={isVictory}
     onClick={handleClick}>
   </button>;
 }
