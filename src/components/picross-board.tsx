@@ -111,7 +111,7 @@ export default function PicrossBoard(props: any) {
   var colNums: Array<Array<number>> = [[]];
   var rowNums: Array<Array<number>> = [];
 
-  const [isVictory, setIsVictory] = useState(true)
+  const [isVictory, setIsVictory] = useState(false)
   var [boardData, setBoardData] = useState(genBoard(width, height))
 
   if(!isVictory){
@@ -174,8 +174,8 @@ export default function PicrossBoard(props: any) {
           <ReloadButton></ReloadButton>
         </div>
       </div>
-      <div className="victoryIndicator" hidden={!isVictory}>
-        <p className="victoryIndicator">You Win!</p>
+      <div className="victoryContainer">
+        <p className="victoryIndicator" hidden={!isVictory}>You Win!</p>
       </div>
     </div>
   );
